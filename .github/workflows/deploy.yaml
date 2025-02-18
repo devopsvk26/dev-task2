@@ -30,12 +30,12 @@ jobs:
       # Step 4: Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t my-app:${{ github.sha }} .
+          docker build -t my-app:v2:${{ github.sha }} .
 
       # Step 5: Push the image to Docker Hub (or other Docker registry)
       - name: Push Docker image
         run: |
-          docker push my-app:${{ github.sha }}
+          docker push my-app:v2:${{ github.sha }}
 
       # Step 6: Deploy the Docker container to the server (e.g., via SSH)
       - name: Deploy to Server
@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.DEPLOY_SERVER_USER }}
           key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
           script: |
-            docker pull my-app:${{ github.sha }}
-            docker stop my-app || true
-            docker rm my-app || true
+            docker pull my-app:v2:${{ github.sha }}
+            docker stop my-app:v2 || true
+            docker rm my-appv2 || true
             docker run -d --name my-app -p 8084:80 my-app:${{ github.sha }}
